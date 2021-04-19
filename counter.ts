@@ -23,7 +23,7 @@ namespace Timers {
             handler();
         }
     }
-    //% block="$this(timer) every $interval millis."
+    //% block="$this(timer) every $interval_ms millis."
     //% interval_ms.shadow="timePicker"
     //% handlerStatement
     public every_x_millis(interval_ms: number, handler: () => void) {
