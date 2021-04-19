@@ -146,5 +146,5 @@ servo_angle_repos = 120
 servo_dessin = false
 compteur = 0
 basic.forever(function () {
-    compteur_inc()
+	
 })
