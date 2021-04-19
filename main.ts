@@ -131,8 +131,8 @@ let servo_angle_dessin = 0
 let distance_detection = 0
 let vitesse_demi_tour = 0
 let vitesse = 0
-let Compteur1 = Timers.createCounters()
-let Timer1 = Timers.createCounters()
+let Counter = Timers.createCounters()
+let Counter2 = Timers.createCounters()
 couleur_chassis()
 vitesse = 255
 let direction = 30
@@ -141,8 +141,9 @@ distance_detection = 20
 servo_angle_dessin = 80
 servo_angle_repos = 120
 servo_dessin = false
-let compteur = 0
 basic.forever(function () {
+    let Timer1: Timers.timer = null
+    let Compteur1: Timers.timer = null
     Compteur1.every_x_millis(100, function () {
         basic.showIcon(IconNames.Heart)
     })

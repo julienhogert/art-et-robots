@@ -1,4 +1,4 @@
-//% color="#AA278D"
+//% color="#D063CF" icon="\uf017"
 //% groups="['Create Timers', 'Use them']"
 namespace Timers {
     //%
@@ -7,17 +7,10 @@ namespace Timers {
          constructor() {
             this.millis = control.millis();
          }
-
-    //% block="$this(timer) every $interval sec."
-    public every_x_secs(interval: number,handler: () => void) {
-        if(this.millis + interval*1000 < control.millis()){
-            this.restart_timer();
-            handler();
-        }
-    }    
+  
     //% block="$this(timer) every $interval sec."
     //% handlerStatement
-    public every_x_secs_inline(interval: number, handler: () => void) {
+    public every_x_secs(interval: number, handler: () => void) {
         if(this.millis + interval*1000 < control.millis()){
             this.restart_timer();
             handler();
@@ -37,19 +30,10 @@ namespace Timers {
         this.millis = control.millis();
     }
 
-    //% block="$this(timer) every $interval sec."
-    //% handlerStatement
-    public onEventAsStatement(interval: number, handler: () => void) {
-        if(this.millis + interval*1000 < control.millis()){
-             this.millis = control.millis();
-             handler();
-        }
-    }
-
     }
     //% group="Create Timers"
     //% block="Create new timer"
-    //% blockSetVariable=Timer1
+    //% blockSetVariable=Counter
     //% weight=100
     export function createCounters(): timer {
         return new timer();
