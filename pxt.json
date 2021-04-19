@@ -12,7 +12,8 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "main.py"
+        "main.py",
+        "counter.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -20,7 +21,7 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "yotta": {
         "config": {
             "microbit-dal": {
