@@ -55,10 +55,6 @@ function reculer () {
     basic.showArrow(ArrowNames.South)
     maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CW, vitesse)
 }
-function compteur_inc () {
-    compteur = Math.floor(control.millis() / 1000)
-    serial.writeLine("" + compteur)
-}
 function compteur_dessiner () {
     if (millis_servo + servo_interval < control.millis()) {
         millis_servo = control.millis()
@@ -129,7 +125,6 @@ let servo_interval = 0
 let millis_servo = 0
 let strip: neopixel.Strip = null
 let playstop = 0
-let compteur = 0
 let servo_dessin = false
 let servo_angle_repos = 0
 let servo_angle_dessin = 0
@@ -137,6 +132,7 @@ let distance_detection = 0
 let vitesse_demi_tour = 0
 let vitesse = 0
 let Compteur1 = Timers.createCounters()
+let Timer1 = Timers.createCounters()
 couleur_chassis()
 vitesse = 255
 let direction = 30
@@ -145,9 +141,12 @@ distance_detection = 20
 servo_angle_dessin = 80
 servo_angle_repos = 120
 servo_dessin = false
-compteur = 0
+let compteur = 0
 basic.forever(function () {
-    Compteur1.every_x_millis(500, function () {
+    Compteur1.every_x_millis(100, function () {
         basic.showIcon(IconNames.Heart)
+    })
+    Timer1.every_x_millis(100, function () {
+        basic.showIcon(IconNames.SmallHeart)
     })
 })
