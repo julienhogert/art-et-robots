@@ -51,13 +51,22 @@ function suivre_ligne_2 () {
 input.onButtonPressed(Button.A, function () {
     dessiner()
 })
+function avance_en_zig_zag (degre: number) {
+    compteur_zig_zag.every_x_millis(500, function () {
+        variation_zig_zag = randint(0, degre)
+        if (Math.randomBoolean()) {
+            maqueen.motorRun(maqueen.Motors.M1, maqueen.Dir.CW, vitesse + variation_zig_zag)
+        } else {
+            maqueen.motorRun(maqueen.Motors.M2, maqueen.Dir.CW, vitesse + variation_zig_zag)
+        }
+    })
+}
 function reculer () {
     basic.showArrow(ArrowNames.South)
     maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CW, vitesse)
 }
 function compteur_dessiner () {
-    if (millis_servo + servo_interval < control.millis()) {
-        millis_servo = control.millis()
+    if (0 + servo_interval < control.millis()) {
         servo_interval = 1000 * randint(0, 5)
         dessiner()
     }
@@ -122,7 +131,6 @@ function dessiner () {
 let distance_sonar = 0
 let derniere_direction = 0
 let servo_interval = 0
-let millis_servo = 0
 let strip: neopixel.Strip = null
 let playstop = 0
 let servo_dessin = false
@@ -131,10 +139,13 @@ let servo_angle_dessin = 0
 let distance_detection = 0
 let vitesse_demi_tour = 0
 let vitesse = 0
+let variation_zig_zag = 0
+let compteur_zig_zag: Timers.timer = null
 let Counter = Timers.createCounters()
-let Counter2 = Timers.createCounters()
+compteur_zig_zag = Timers.createCounters()
+variation_zig_zag = 0
 couleur_chassis()
-vitesse = 255
+vitesse = 200
 let direction = 30
 vitesse_demi_tour = 60
 distance_detection = 20
@@ -142,12 +153,6 @@ servo_angle_dessin = 80
 servo_angle_repos = 120
 servo_dessin = false
 basic.forever(function () {
-    let Timer1: Timers.timer = null
-    let Compteur1: Timers.timer = null
-    Compteur1.every_x_millis(100, function () {
-        basic.showIcon(IconNames.Heart)
-    })
-    Timer1.every_x_millis(100, function () {
-        basic.showIcon(IconNames.SmallHeart)
-    })
+    avance_en_zig_zag(10)
+    eviter_les_obstacles()
 })
