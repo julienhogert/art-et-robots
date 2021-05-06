@@ -1,41 +1,34 @@
-//% color="#D063CF" icon="\uf017"
-//% groups="['Create Timers', 'Use them']"
-namespace Timers {
+//% color="#AA278D"
+namespace Counters {
     //%
-    export class timer { 
+    export class counter { 
          millis:number;
+         interval:number;
+         interval_set:boolean;
          constructor() {
             this.millis = control.millis();
+            this.interval_set=false;
          }
-  
-    //% block="$this(timer) every $interval sec."
+        
+    //% block="$this(counter) count until $interval and restart"
     //% handlerStatement
-    public every_x_secs(interval: number, handler: () => void) {
-        if(this.millis + interval*1000 < control.millis()){
-            this.restart_timer();
+    public onEventAsStatement(interval: number, handler: () => void) {
+        if(this.interval_set==false){
+            this.interval=interval;
+            this.interval_set=true;
+        }
+        if(this.millis + this.interval*1000 < control.millis()){
+            this.millis = control.millis();
+            this.interval_set=false;
             handler();
         }
     }
-    //% block="$this(timer) every $interval_ms millis."
-    //% interval_ms.shadow="timePicker"
-    //% handlerStatement
-    public every_x_millis(interval_ms: number, handler: () => void) {
-        if(this.millis + interval_ms < control.millis()){
-             this.restart_timer();
-             handler();
-        }
-    }
-    //% block="$this(timer) restart timer"
-    public restart_timer() {
-        this.millis = control.millis();
-    }
 
     }
-    //% group="Create Timers"
-    //% block="Create new timer"
-    //% blockSetVariable=Counter
-    //% weight=100
-    export function createCounters(): timer {
-        return new timer();
+
+    //% block="create counters"
+    //% blockSetVariable=counter
+    export function createCounters(): counter {
+        return new counter();
     }
-} 
+}
