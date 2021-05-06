@@ -15,13 +15,40 @@ function avancer_en_ligne () {
     basic.showArrow(ArrowNames.North)
     maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CW, vitesse)
 }
+function suivre_une_ligne2 () {
+    if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
+        maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CW, 50)
+    } else {
+        if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+            maqueen.motorRun(maqueen.Motors.M2, maqueen.Dir.CW, 50)
+            maqueen.motorStop(maqueen.Motors.M1)
+            if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+                maqueen.motorRun(maqueen.Motors.M2, maqueen.Dir.CW, 50)
+                maqueen.motorStop(maqueen.Motors.M1)
+            }
+        } else {
+            if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
+                maqueen.motorRun(maqueen.Motors.M1, maqueen.Dir.CW, 50)
+                maqueen.motorStop(maqueen.Motors.M2)
+                if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+                    maqueen.motorRun(maqueen.Motors.M1, maqueen.Dir.CW, 50)
+                    maqueen.motorStop(maqueen.Motors.M2)
+                }
+            }
+        }
+    }
+}
 function couleur_chassis () {
     strip = neopixel.create(DigitalPin.P15, 4, NeoPixelMode.RGB)
     strip.shift(2)
     strip.showColor(neopixel.colors(NeoPixelColors.Orange))
 }
 input.onButtonPressed(Button.A, function () {
-    dessiner()
+    if (dessin_onoff) {
+        dessin_onoff = 0
+    } else {
+        dessin_onoff = 1
+    }
 })
 function reculer () {
     basic.showArrow(ArrowNames.South)
@@ -37,9 +64,8 @@ function dessiner_aleatoirement () {
 input.onButtonPressed(Button.B, function () {
     if (playstop) {
         stopper()
-        basic.showIcon(IconNames.No)
-        basic.pause(100)
         playstop = 0
+        basic.pause(500)
     } else {
         avancer(30)
         basic.showIcon(IconNames.Heart)
@@ -49,22 +75,20 @@ input.onButtonPressed(Button.B, function () {
 })
 function suivre_une_ligne () {
     if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
-        avancer(20)
-        derniere_direction = 0
-    }
-    if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
-        tourner(-10)
-        derniere_direction = -1
-    }
-    if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
-        tourner(10)
-        derniere_direction = 1
-    }
-    if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
-        if (derniere_direction < 0) {
-        	
+        avancer(50)
+    } else {
+        if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+            tourner(-50)
+            if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+                tourner(-50)
+            }
         } else {
-        	
+            if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
+                tourner(50)
+                if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+                    tourner(50)
+                }
+            }
         }
     }
 }
@@ -74,18 +98,35 @@ function avancer (vitesse: number) {
 }
 function tourner (directionf: number) {
     if (directionf < 0) {
-        basic.showArrow(ArrowNames.East)
-        maqueen.motorRun(maqueen.Motors.M1, maqueen.Dir.CW, vitesse - Math.abs(directionf))
-        maqueen.motorRun(maqueen.Motors.M2, maqueen.Dir.CW, vitesse + Math.abs(directionf))
+        maqueen.motorRun(maqueen.Motors.M2, maqueen.Dir.CW, Math.abs(directionf))
+        maqueen.motorStop(maqueen.Motors.M1)
     } else {
-        basic.showArrow(ArrowNames.West)
-        maqueen.motorRun(maqueen.Motors.M1, maqueen.Dir.CW, vitesse + Math.abs(directionf))
-        maqueen.motorRun(maqueen.Motors.M2, maqueen.Dir.CW, vitesse - Math.abs(directionf))
+        maqueen.motorRun(maqueen.Motors.M1, maqueen.Dir.CW, Math.abs(directionf))
+        maqueen.motorStop(maqueen.Motors.M2)
     }
 }
 function stopper () {
-    maqueen.motorStop(maqueen.Motors.All)
     basic.showIcon(IconNames.No)
+    maqueen.motorStop(maqueen.Motors.All)
+}
+function suivre_une_ligne3 () {
+    if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
+        avancer(50)
+    } else {
+        if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 0 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+            tourner(-50)
+            if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+                tourner(-50)
+            }
+        } else {
+            if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 0) {
+                tourner(50)
+                if (maqueen.readPatrol(maqueen.Patrol.PatrolLeft) == 1 && maqueen.readPatrol(maqueen.Patrol.PatrolRight) == 1) {
+                    tourner(50)
+                }
+            }
+        }
+    }
 }
 function eviter_les_obstacles () {
     distance_sonar = maqueen.Ultrasonic(PingUnit.Centimeters)
@@ -96,24 +137,26 @@ function eviter_les_obstacles () {
         	
         }
         if (playstop == 1) {
-            avancer(1)
+            avancer(30)
         } else {
             stopper()
         }
     }
 }
 function dessiner () {
-    if (servo_dessin == true) {
-        maqueen.servoRun(maqueen.Servos.S2, servo_angle_repos)
-        servo_dessin = false
-    } else {
-        maqueen.servoRun(maqueen.Servos.S2, servo_angle_dessin)
-        servo_dessin = true
+    if (dessin_onoff) {
+        if (servo_dessin == true) {
+            maqueen.servoRun(maqueen.Servos.S2, servo_angle_repos)
+            servo_dessin = false
+        } else {
+            maqueen.servoRun(maqueen.Servos.S2, servo_angle_dessin)
+            servo_dessin = true
+        }
     }
 }
 let distance_sonar = 0
-let derniere_direction = 0
 let valeur_aleatoire = 0
+let dessin_onoff = 0
 let strip: neopixel.Strip = null
 let servo_dessin = false
 let servo_angle_repos = 0
@@ -136,5 +179,9 @@ servo_dessin = false
 maqueen.servoRun(maqueen.Servos.S2, servo_angle_repos)
 avancer(20)
 basic.forever(function () {
-    suivre_une_ligne()
+    if (playstop) {
+        suivre_une_ligne2()
+        dessiner_aleatoirement()
+        eviter_les_obstacles()
+    }
 })
